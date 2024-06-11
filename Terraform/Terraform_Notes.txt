@@ -80,3 +80,44 @@
     6.4 terraform destroy (Once we are done the deployment, if we are not using that instance the we can destroy the instance by using this command then it will terminate the instance perminatly and we cant undo the destory)
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+#Day5: 
+
+1. we can't provide the multile secret key's at the configartion time, so then we need to create the another file name providers.tf then we need to mention every provider details in one place.
+2. How we can supply the credentials by env variable to the terraform so we need to create the env variable like below.
+    2.1 export AWS_ACCESS_KEY_ID="anaccesskey'
+    2.2 export AWS_SECRET_ACCESS_KEY="ansecretkey"
+    2.3 export AWS_DEFAULT_REGION="us-west-2"
+3. The env variable got created or not we need to check while executing this command: "env | grep -i aws"
+4. How we can create multule instance in the aws by using terraform
+    4.1 create single name with all the multuple instances.
+    4.2 create every instance with there unique names
+
+        4.1.1 code block for single name with multiple instances:
+
+                count = 3       
+
+                tag = {
+                    name = "multuple instance"
+                }
+
+        4.2.1 code block for unique name for every instances:
+
+                count = 3       
+
+                tag = {
+                    name = "instance-${count.index}"            # here based on count and with index values
+                }
+
+5. Terraform State File:
+    5.1 Terraform state file are important for resource tracking.
+    5.2 Terraform state a way, that terraform read to identify what has been deployed.
+    5.3 Very critical to terraform Functionality
+
+        Terraform configaration (appServer <..>, appNetwork <..>, appDataBase <..>) -------------> Terraform State File (terraform.tfstate) ---------------->Managed Infrastructure (AWS EC2 Instance, AWS VPC, Azure DB)
+    
+    5.4 Stored in Flat File. By default named "terraform.tfstate".
+    5.5 Stored in same working directory. But can be stored remotely.
+    5.6 Helps terraform calcualte deployment deltas.
+    5.7 Terraform Plan cab be used to create the New deployment plan.
+    5.8 Never lose your Terraform State File. 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
