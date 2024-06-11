@@ -1,0 +1,82 @@
+*** Terraform Notes ***
+
+#Day 1:
+
+0. Terraform is an infrastructure as code tool that lets you build, change, and version cloud and on-prem resources safely and efficiently.
+1. HashiCorp Terraform is an infrastructure as code tool that lets you define both cloud and on-prem resources in human-readable configuration files that you can version, reuse, and share.
+2. You can then use a consistent workflow to provision and manage all of your infrastructure throughout its lifecycle.
+3. Terraform can manage low-level components like compute, storage, and networking resources, as well as high-level components like DNS entries and SaaS features.
+4. Infrastructure as Code (IaC) tools allow you to manage infrastructure with configuration files rather than through a graphical user interface.
+5. IaC allows you to build, change, and manage your infrastructure in a safe, consistent, and repeatable way by defining resource configurations that you can version, reuse, and share.
+6. Terraform is HashiCorp's infrastructure as code tool. It lets you define resources and infrastructure in human-readable, declarative configuration files, and manages your infrastructure's lifecycle. 
+7. Using Terraform has several advantages over manually managing your infrastructure:
+    7.1 Terraform can manage infrastructure on multiple cloud platforms.
+    7.2 The human-readable configuration language helps you write infrastructure code quickly.
+    7.3 Terraform's state allows you to track resource changes throughout your deployments.
+    7.4 You can commit your configurations to version control to safely collaborate on infrastructure.
+
+8. Terraform wokrs: 
+    8.1 Terraform creates and manages resources on cloud platforms and other services through their application programming interfaces (APIs). Providers enable Terraform to work with virtually any platform or service with an accessible API.
+
+        Terraform <------> Terraform providers <------> Target API
+
+9. The core Terraform workflow consists of three stages:
+    9.1 Write: You define resources, which may be across multiple cloud providers and services. For example, you might create a configuration to deploy an application on virtual machines in a Virtual Private Cloud (VPC) network with security groups and a load balancer.
+    9.2 Plan: Terraform creates an execution plan describing the infrastructure it will create, update, or destroy based on the existing infrastructure and your configuration.
+    9.3 Apply: On approval, Terraform performs the proposed operations in the correct order, respecting any resource dependencies. For example, if you update the properties of a VPC and change the number of virtual machines in that VPC, Terraform will recreate the VPC before scaling the virtual machines.
+
+
+        Write (Terraform Project- Terraform configuration   Terraform state file) (Define infrastructure in configuration files) ------------> Plan (Terminal) (Review the changes Terraform will make to your infrastructure) ----------------> Apply (AWS, AZURE, GCP.....ect) (Terraform provisions your infrastructure & update the state file)
+
+10. Terraform takes an immutable approach to infrastructure, reducing the complexity of upgrading or modifying your services and infrastructure.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Day 2:
+
+1. Terrafrom commands: 
+    1.1 Terraform init: This command to initialize the working directory that contains your code. It inti the terreform plugins/necessary modules in our working directory.
+    1.2 Terraform plan: This command which will execute after the data from intialization. After intialization, read the code & then create & shows a "plan" of execution of the our deployment. 
+                        It means that terraform plan will read the all the configuration which you have written down in the configuration.
+                        Terraform plan doesn't deploy anything, it just shows what is going to deply.
+                        At this stage, authentication credentials are used to connect to your infrastructure.
+    1.3 Terraform apply: This command deploy the infrastructure & statements in the code in the cloud.
+                        update the deployment state tracking i.e state files.
+                        It used to create a new deployment from our configuration files and update the existing deployment as well.
+                        If some resource are already deployed the this command will deploy updated code & tracking.
+    1.4 Terraform destroy: This command looks at the recorded & store state files created during deployment & destroy resources found in state file.
+                            Is should be used carefully, as this is non-reversible command. Take backup and make sure what you want to destroy.
+
+        Write a code (IAC-HCL) ==============> Terraform init ==============> Terraform plan >>>>>>>>>>>>>>> Terraform apply --------------> Terraform destroy (not mandotory to do but remining all are nedded)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Day3:
+
+1. Terraform providers:
+    1.1 providers are public cloud vendors, to which terraform interact to create resource.
+    1.2 Terraform relies on plugins called "providers" to interact which cloud providers.
+    1.3 Terraform configurations must declare which providers they require so that terraform can install and use them.
+    1.4 Terrafrom providers release is separate from terraform release.
+    1.5 We can write our own providers.
+    1.6 Terraform finds & install providers as you initialize terraform (using terraform init command)
+    1.7 As a best practice providers should be versioned in your terraform config files.
+    1.8 Once execute the terraform init command some plugins/modules are installed mentioned below
+        ./
+        ../
+        .terraform/ ------------> providers/registry.terraform.io/HashiCorp/ (plugins/modules) --------->aws/  azurem/ (providers)
+        /terraform.loc.h
+        main.tf
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Day4:
+
+1. We need to create the IAM user to the AWS console 
+2. We need to create the security group and edit the inbounded rules to provide the all traffic------>custom----->IP Address we need to give the created machine one.
+3. Connect the server machine and create the terraforn folder inside we need to create the new instance code (HCL) (Basic_Terraform_code/create_1st_instance.tf)
+5. Write the required code in the createinstance.tf file and provide the access key but we can't provide the secret key in file directly because some will cut by using both the values so we can provide the secret key at the run time env.
+6. comments to run:
+    6.1 terraform init (Terraform initialize the plugins to the using providers/services)
+    6.2 terraform plan (we can see the our configaration data before pply the changes was made by user)
+    6.3 terraform apply (once we execute this command it will create the instance in the AWS conslone and going to see the running state)
+    6.4 terraform destroy (Once we are done the deployment, if we are not using that instance the we can destroy the instance by using this command then it will terminate the instance perminatly and we cant undo the destory)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
