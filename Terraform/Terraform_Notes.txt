@@ -121,3 +121,130 @@
     5.7 Terraform Plan cab be used to create the New deployment plan.
     5.8 Never lose your Terraform State File. 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Day6:
+
+1. Variables in Terraform:
+    1.1 Variables are necessary to parameterizing our deployments using Terraform.
+    1.2 Input variables enable user to pass in configuration values at the time of deployment.
+    1.3 using terraform Input variable is one way of deploying development, staging, or production environments using the same terraform resource decalarations with slightly different configaration.
+    1.4 Define input variable: terraform input variable are defined using a variable blockthat define the variable name and other option parameters for the variable.
+        these variable blocks can be place in any '.tf' filr within your terraform Project, but a common location used is within a filr named 'variable.tf'.
+    1.5 definition of the input variable: the variable block is defined with the variable keyword followed by the name of the input variable.
+        Also the required type property must be added to define the data type of the variable; such as string, number, object, or other supported data types.
+    1.6 sample of varible decalarations in terraform:
+
+            variable "environment" {
+                type = string
+            }
+
+            variable "location" {
+                type = string
+                default = "eastus"
+                description = "The Azure Region to deploy resources"
+            }
+    
+    1.7 Input Variables Conditions: its supports version 0.13.0 above
+        When defining input variable for a terraform Project, the input variable can have a custom validation rules defined.
+        the custom validation rules for an input variable are defined by adding a validation block within the variable for the input variable.
+
+        variable "location" {
+            type = string
+            description = "The azure Region to deploy resource"
+
+            validation {
+                Condition = contains(["eastus", "westus"], lower(var.location))
+                error_message = "Unsupported azure region specified. supported regions include: eastus, westus"
+            }
+        }
+
+    1.8 Input Variable Types -
+        
+        1.8.1 Primitive Types - Terraform supports three primitive types for Input Variables. string, number, bool
+        1.8.2 Complex Types - Complex types allow you to group multiple values together into a single variable. Collection types, Structural types.
+            
+            1.8.2.1 Collection Types - A collection of multiple values grouped together as a single value.
+                
+                1.8.2.1.1 list(...) – A sequence of values identified by an index starting with zero.
+                1.8.2.1.2 map(...) – A collection of values; each with a string label identifier.
+                1.8.2.1.3 set(...) – A collection of unique values without any secondary identifiers or ordering.
+            1.8.2.2 Structural Types - A collection of multiple values of several distinct types grouped together as a single value.
+                
+                1.8.2.2.1 object(...) – A collection of values each with their own type.
+                1.8.2.2.2 tuple(...) – A sequence of values each with their own type.
+
+    1.9 Use of variable inside the configaration file:
+
+        1.9.1 Single Place Configuration is not a Good Idea.
+        1.9.2 Use Variable to Manage the Secrets.
+        1.9.3 No Need to push AWS creds in Git Repo
+        1.9.4 User Variable for Dynamic Elements like AMI
+        1.9.5 Variable Makes files flexible and env independent.
+
+            createInstance.tf -
+
+                provider "aws" {
+                    access_key = "AKIASMSIZOF4QD2NTPB6"
+                    secret_key = "SECRET_KEY_HERE"
+                    region = "us-east-2"
+                }
+                resource "aws_instance" "MyFirstInstnace" {
+                    count = 3
+                    ami = "ami-05692172625678b4e"
+                    instance_type = "t2.micro"
+
+                tags = {
+                    Name = "demoinstnce-${count.index}"
+                    }
+                }
+        
+            provider.tf -
+
+                provider "aws" {
+                    access_key = "AKIASMSIZOF4QD2NTPB6"
+                    secret_key = "SECRET_KEY_HERE"
+                    region = "us-east-2"
+                }
+
+            using the variables to access and this is the global syntex: 
+
+                provider "aws" {
+                    access_key = “${var.AWS_ACCESS_KEY}”
+                    secret_key = “${var.AWS_SECRET_KEY}”
+                    region = “${var.AWS_REGION}”
+                }
+
+            vars.tf or variable.tf-
+            
+                variable “AWS_ACCESS_KEY” {}
+                variable “AWS_SECRET_KEY” {}
+                variable “AWS_REGION” 
+                {
+                    default = “us-east-2”
+                }
+
+            terraform.tfvars (when commeting the code this file will not be commmited in the repository-
+
+                AWS_ACCESS_KEY = “”
+                AWS_SECRET_KEY = “”
+                AWS_REGION = “”
+
+            createInstance.tf -
+
+                resource "aws_instance" "MyFirstInstnace" {
+                    ami = "ami-05692172625678b4e"
+                    instance_type = "t2.micro"
+                }
+
+    1.10 teraform.tfvar file will create the at run time and we will provide the our keys at same time.
+    1.11 we can provide the keys at runtime for theree diffrent wayes:
+
+        1.11.1 While run the terraform plan then it will ask the access_key and secret_key.
+        1.11.2 While running the terraform plan command just we include "-var" 
+
+                syntex: terraform plan -var AWS_ACCESS_KEY = "asdhagda" -var AWS_SECRET_KEY = "dydauh"
+        
+        1.11.3 While create the 'vi terraform.tfvar' its will create the file at run time and we will provide the access_key & secret_key
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+            
