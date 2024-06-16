@@ -236,7 +236,7 @@
                     instance_type = "t2.micro"
                 }
 
-    1.10 teraform.tfvar file will create the at run time and we will provide the our keys at same time.
+    1.10 teraform.tfvars file will create the at run time and we will provide the our keys at same time.
     1.11 we can provide the keys at runtime for theree diffrent wayes:
 
         1.11.1 While run the terraform plan then it will ask the access_key and secret_key.
@@ -244,7 +244,39 @@
 
                 syntex: terraform plan -var AWS_ACCESS_KEY = "asdhagda" -var AWS_SECRET_KEY = "dydauh"
         
-        1.11.3 While create the 'vi terraform.tfvar' its will create the file at run time and we will provide the access_key & secret_key
+        1.11.3 While create the 'vi terraform.tfvar' its will create the file at run time and we will provide the access_key & secret_key.
+    
+    1.12 we are using collection types variables:
+
+            variable.tf 
+
+                List Variable:
+
+                variable "Security_Group" {
+                    type = list()
+                    default = ["sg-1234", "sg-43322", "sg-21677", "sg-32698"]
+                }
+
+                Map Variable:
+                
+                variable "AMIS" {
+                    type = map()
+                    default = {
+                        "us-east-1" = "tyfgsshdbaks"
+                        "us-east-2" = "ydtewyuahkdk"
+                        "us-west-1" = "dy873hbd7392"
+                        "us-west-2" = "ujhbc8iu902i"
+                    }
+
+            createinstance.tf
+
+                List Variable:
+
+                    security_groups = "${var.Security_Group}"
+
+                Map Variable:
+                
+                    ami = lookup(var.AMIS, var.AWS_REGION)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
             
