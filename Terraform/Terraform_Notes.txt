@@ -223,7 +223,7 @@
                     default = “us-east-2”
                 }
 
-            terraform.tfvars (when commeting the code this file will not be commmited in the repository-
+            terraform.tfvars (when commeting the code this file will not be committed in the repository-
 
                 AWS_ACCESS_KEY = “”
                 AWS_SECRET_KEY = “”
@@ -279,4 +279,87 @@
                     ami = lookup(var.AMIS, var.AWS_REGION)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+#Day7: 
+
+-> Provision Software with Terraform:
+
+    -> ➤ There are 2 ways to Provision Software on your Instance.
+            ➤ Build Custom AMI:
+            ➤ Bundle your softwares and Files in Base Image.
+            ➤ Packer is Tool to Bundle the Custom AMIs.
+            ➤ Boot Standard AMIs and Install Software on Instance at Runtime.
+            ➤ Using File Upload.
+            ➤ Using Remote-exec
+            ➤ Using tools like Chef, Puppet & Ansible.Terraform : Deployment Automation
+            ➤ Chef is Integrated with Terraform.
+            ➤ User Can Run Puppet using Remote-Exec
+            ➤ For Ansible, First Run Terraform, Get the Host IP address
+            and then execute Ansible Playbook on Host.Terraform : Deployment Automation
             
+            ➤ File Upload on Instance -
+
+                resource "aws_instance" "MyFirstInstnace" {
+                ami = lookup(var.AMIS, var.AWS_REGION)
+                instance_type = "t2.micro"
+
+                tags = {
+                    Name = "demoinstnce"
+                }
+
+                provisioner "file" {
+                    source = "installNginx.sh"
+                    destination = "/etc/installNginx.sh"
+                }
+                }
+
+            ➤ Remote-exec needs to be execute to execute the Script.
+            ➤ Terraform Provisioner needs to use SSH(Unix/Linux) or
+            WinRM(Windows Machine)
+            ➤ User can use Connection to Make SSH Connection on Host.
+
+                provisioner "file" {
+                    source = "installNginx.sh"
+                    destination = "/etc/installNginx.sh"
+
+                    connection {
+                        user = var.instance_user
+                        password = var.instance_pass
+                }
+                }
+
+            ➤ On AWS User needs to use SSH KeyPairs instead of Password.
+
+                resource "aws_key_pair" "levelup-key" {
+                    key_name = "levelup_key"
+                    public_key = "ssh rsa my-public-key"
+                }
+
+                resource "aws_instance" "MyFirstInstnace" {
+                    ami = lookup(var.AMIS, var.AWS_REGION)
+                    instance_type = "t2.micro"
+                    key_name = aws_key_pair.levelup_key.key_name
+                
+                tags = {
+                    Name = "custom_instance"
+                }
+
+                provisioner "file" {
+                    source = "installNginx.sh"
+                    destination = "/etc/installNginx.sh"
+
+                    connection {
+                        user = var.instance_user
+                        private_key = file(var.path_to_private_key)
+                    }
+                }
+                }
+
+            ➤ Remote-exec need to execute the Script.
+                provisioner "remote-exec" {
+                    inline = [
+                    "chmod +x /etc/installNginx.sh",
+                    "/etc/installNginx.sh"
+                    ]
+                }
+-------------------------------------------------------------------------------------------------------------------------------------------------
+

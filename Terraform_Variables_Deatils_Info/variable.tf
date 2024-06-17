@@ -1,22 +1,37 @@
-variable "AWS_ACCESS_KEY" {}
+variable "AWS_ACCESS_KEY" {
+    type = string
+    default = "AKIASMSIZOF42P2VUDSZ"
+}
 
 variable "AWS_SECRET_KEY" {}
 
 variable "AWS_REGION" {
-    default = "us-east-2"
+default = "us-east-2"
 }
 
-variable "Security_Group" {
-    type = list()
-    default = ["sg-1234", "sg-43322", "sg-21677", "sg-32698"]
+variable "Security_Group"{
+    type = list
+    default = ["sg-24076", "sg-90890", "sg-456789"]
 }
 
 variable "AMIS" {
-    type = map()
+    type = map
     default = {
-        "us-east-1" = "tyfgsshdbaks"
-        "us-east-2" = "ydtewyuahkdk"
-        "us-west-1" = "dy873hbd7392"
-        "us-west-2" = "ujhbc8iu902i"
+        us-east-1 = "ami-0f40c8f97004632f9"
+        us-east-2 = "ami-05692172625678b4e"
+        us-west-2 = "ami-0352d5a37fb4f603f"
+        us-west-1 = "ami-0f40c8f97004632f9"
     }
+}
+
+variable "PATH_TO_PRIVATE_KEY" {
+  default = "levelup_key"
+}
+
+variable "PATH_TO_PUBLIC_KEY" {
+  default = "levelup_key.pub"
+}
+
+variable "INSTANCE_USERNAME" {
+  default = "ubuntu"
 }
