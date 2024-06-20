@@ -34,7 +34,7 @@
 #Day 2:
 
 1. Terrafrom commands: 
-    1.1 Terraform init: This command to initialize the working directory that contains your code. It inti the terreform plugins/necessary modules in our working directory.
+    1.1 Terraform init: This command to initialize the working directory that contains your code. It inti the terraform plugins/necessary modules in our working directory.
     1.2 Terraform plan: This command which will execute after the data from intialization. After intialization, read the code & then create & shows a "plan" of execution of the our deployment. 
                         It means that terraform plan will read the all the configuration which you have written down in the configuration.
                         Terraform plan doesn't deploy anything, it just shows what is going to deply.
@@ -363,3 +363,18 @@
                 }
 -------------------------------------------------------------------------------------------------------------------------------------------------
 
+#Day8:
+
+1. Data Source in terraform:
+
+    ➤ Terraform provides DataSource for Certain Cloud Providers like AWS.
+    ➤ DataSource Provides the dynamic Information about entities that are not managed by the current Terraform and configuration.
+    ➤ AWS provides a lot of structured data which can be accessed via AWS APIs.
+    ➤ Terraform expose this information using DataSources like AMIs, Availability Zones.
+    ➤ Referencing a resource defined in a data source won’t create the resource itself, and your plan will fail if you reference nonexistent data or infrastructure.Terraform : Deployment Automation
+    ➤ DataSource also provides the All IPs in use by AWS.
+    ➤ This will help in IP Base Traﬃc filter.
+    ➤ Traﬃc Filer on AWS can be done via Security Groups.
+    ➤ Incoming and Outgoing Traﬃc can be done via Inbound Rules and Outbound Rules.
+    ➤ Rules filter the traﬃc on the basis of Protocol, IP Range, and Ports.
+--------------------------------------------------------------------------------------------------------------------------------------------------
